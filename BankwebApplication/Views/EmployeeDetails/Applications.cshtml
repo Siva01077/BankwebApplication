@@ -1,0 +1,265 @@
+﻿@model List<LoginsModel.BankAccountRegistrationDTO>
+@{
+    Layout = "~/Views/Shared/_Layout_Employee.cshtml";
+    ViewBag.Title = "Pending Applications";
+}
+<style>
+  
+
+    td[contenteditable]:focus {
+        box-shadow: inset 0 0 5px #ffc107;
+    }
+
+    td {
+        cursor: pointer;
+    }
+
+    .action-container .btn {
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+
+    td .action-container {
+        flex-wrap: wrap; /* wrap on smaller screens */
+        gap: 0.5rem; /* spacing between buttons */
+        justify-content: center;
+    }
+
+    table td, table th {
+        white-space: normal; /* allow text/button wrapping */
+        text-align: center;
+        vertical-align: middle;
+        padding: 8px 12px;
+        max-width: 220px;
+        overflow: visible;
+        word-wrap: break-word;
+    }
+</style>
+
+<script>
+    function bindActionButtons() {
+        $('.approve-btn').off('click').on('click', function () {
+            var container = $(this).closest('.action-container');
+            var email = container.data('email');
+            var name = container.data('name');
+
+            $.ajax({
+                url: '@Url.Action("ApproveApplication", "EmployeeDetails")',
+                type: 'POST',
+                data: { email: email, name: name },
+                success: function (result) {
+                    if (result.success) {
+                        container.html(`<span class="badge bg-success">Approved</span>`);
+                    } else {
+                        alert("Email not found");
+                    }
+                },
+                error: function () {
+                    alert("Approval failed.");
+                }
+            });
+        });
+
+        $('.reject-btn').off('click').on('click', function () {
+            var container = $(this).closest('.action-container');
+            var email = container.data('email');
+            var remarks = prompt("Please enter remarks for rejection:");
+          
+
+    if (remarks !== null && remarks.trim() !== "") {
+        $.ajax({
+            url: '@Url.Action("RejectApplication", "EmployeeDetails")',
+            type: 'POST',
+            data: {
+                email: email,
+                remarks: remarks
+            },
+            success: function (result) {
+                if (result.success) {
+                    container.html(`<span class="badge bg-success">Rejected</span>`);
+
+                } else {
+                    alert("Rejection failed: " + result.message);
+                }
+            },
+            error: function () {
+                alert("Rejection failed due to a server error.");
+            }
+        });
+    } else {
+        alert("Rejection requires remarks.");
+    }
+        });
+    }
+
+    $(document).ready(function () {
+        bindActionButtons();
+
+        $('.edit-btn').on('click', function () {
+            var row = $(this).closest('tr');
+            row.find('.editable').attr('contenteditable', true).first().focus();
+
+
+
+            var EditData = row.find('.action-container');
+            EditData.find('.edit-btn, .approve-btn, .reject-btn').hide();
+            EditData.find('.save-btn, .cancel-btn').show();
+        });
+
+        $('.cancel-btn').on('click', function () {
+            var row = $(this).closest('tr');
+            row.find('.editable').attr('contenteditable', false);
+
+            var actionContainer = row.find('.action-container');
+            actionContainer.find('.save-btn, .cancel-btn').hide();
+            actionContainer.find('.edit-btn, .approve-btn, .reject-btn').show();
+        });
+
+        $('.save-btn').on('click', function () {
+            var row = $(this).closest('tr');
+            var email = row.data('email');
+            var name = row.find('.Name').text().trim();
+            var phone = row.find('.Phone').text().trim();
+            var address = row.find('.Address').text().trim();
+            var gender = row.find('.Gender').text().trim();
+            var dob = row.find('.DateOfBirth').text().trim();
+
+            $.ajax({
+                url: '@Url.Action("UpdateApplicationInline", "EmployeeDetails")',
+                type: 'POST',
+                data: {
+                    Email: email,
+                    Name: name,
+                    Phone: phone,
+                    Address: address,
+                    Gender: gender,
+                    DateOfBirth: dob
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert("Updated successfully");
+                        location.reload();
+                    } else {
+                        alert("Update failed");
+                    }
+                },
+                error: function () {
+                    alert("AJAX error");
+                }
+            });
+        });
+    });
+</script>
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0 text-center">Pending Account Applications</h3>
+        </div>
+        <div class="card-body p-4">
+            <div class="text-end mb-3">
+                <a href="@Url.Action("Applications", "EmployeeDetails")" class="btn btn-outline-secondary">Refresh</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Gender</th>
+                            <th>DOB</th>
+                            <th>Aadhar No.</th>
+                            <th>Aadhar Proof</th>
+                            <th>PAN No.</th>
+                            <th>PAN Proof</th>
+                            <th>Photo</th>
+                            <th>Account Type</th>
+                            <th>Mode of Operation</th>
+                            <th style="display:none;">Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr data-email="@item.Email">
+                                    <td class="editable Name">@item.Name</td>
+                                    <td>@item.Email</td>
+                                    <td class="editable Phone">@item.Phone</td>
+                                    <td class="editable Address">@item.Address</td>
+                                    <td class="editable Gender">@item.Gender</td>
+                                    <td class="editable DateOfBirth">@((item.DateOfBirth != null) ? item.DateOfBirth.Value.ToString("dd-MM-yyyy") : "")</td>
+                                    <td>@item.AadharNumber</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.AadharProof))
+                                        {
+                                            <a href="@Url.Content("~/Uploads/" + item.AadharProof)" target="_blank" class="btn btn-sm btn-outline-info">View</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No File</span>
+                                        }
+                                    </td>
+                                    <td>@item.PanNumber</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.PanProof))
+                                        {
+                                            <a href="@Url.Content("~/Uploads/" + item.PanProof)" target="_blank" class="btn btn-sm btn-outline-info">View</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No File</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.Photo))
+                                        {
+                                            <img src="@Url.Content("~/Uploads/" + item.Photo)" class="rounded-circle border border-secondary" width="50" height="50" />
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No Photo</span>
+                                        }
+                                    </td>
+                                    <td>@item.AccountType</td>
+                                    <td>@item.ModeOfOperation</td>
+                                    <td style="display:none;"><span class="badge bg-warning text-dark">@item.Status</span></td>
+                                    <td>
+                                        <div class="action-container d-flex gap-2 flex-wrap align-items-center justify-content-center"
+                                             style="min-width: 220px;"
+                                             data-email="@item.Email" data-name="@item.Name">
+                                            @if (item.Status == "Pending")
+                                            {
+                                                <button class="btn btn-sm btn-primary approve-btn">Approve</button>
+                                                <button class="btn btn-sm btn-danger reject-btn">Reject</button>
+                                                <button class="btn btn-sm btn-warning edit-btn">Edit</button>
+                                                <button class="btn btn-sm btn-success save-btn" style="display:none;">Save</button>
+                                                <button class="btn btn-sm btn-secondary cancel-btn" style="display:none;">Cancel</button>
+                                            }
+                                            else if (item.Status == "Accepted")
+                                            {
+                                                <span class="badge bg-success">Approved</span>
+                                            }
+                                            else if (item.Status == "Rejected")
+                                            {
+                                                <span class="badge bg-danger">Rejected</span>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="15" class="text-center text-muted">No pending applications found.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+﻿@model LoginsModel.TransactionModel
+@{
+    ViewBag.Title = "Deposit";
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+}
+
+<!-- Load jQuery if not already -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#depositForm").submit(function (e) {
+            e.preventDefault();
+
+            var AmountData = {
+                SenderName: $("#SenderName").val(),
+                Credit: parseFloat($("#Credit").val())
+            };
+
+            $.ajax({
+                url: '@Url.Action("Deposit", "UserAccountDetails")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(AmountData),
+                success: function () {
+                    $("#depositMessage").html('<div class="alert alert-success">Deposit successful.</div>');
+                    setTimeout(() => window.location.href = '@Url.Action("UserDashboard", "UserAccountDetails")', 1000);
+                },
+                error: function () {
+                    $("#depositMessage").html('<div class="alert alert-danger">Deposit failed. Please try again.</div>');
+                }
+            });
+        });
+    });
+</script>
+
+<h3 class="text-success">Deposit</h3>
+<div id="depositMessage"></div>
+
+<form id="depositForm">
+    <div class="mb-3">
+        @Html.LabelFor(m => m.SenderName)
+        @Html.TextBoxFor(m => m.SenderName, new { @class = "form-control", placeholder = "Enter your name", required = "required", id = "SenderName" })
+    </div>
+    <div class="mb-3">
+        @Html.Label("Credit", "Amount")
+        @Html.TextBoxFor(m => m.Credit, new { @class = "form-control", required = "required", id = "Credit" })
+    </div>
+    <button type="submit" class="btn btn-success">Deposit</button>
+</form>

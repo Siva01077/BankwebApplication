@@ -1,0 +1,78 @@
+﻿@model LoginsModel.UserLoginDTO
+@{
+    ViewBag.Title = "Check Application Status";
+    Layout = "~/Views/Shared/_Layout_Login.cshtml";
+}
+
+<h2 class="text-center my-4">Check Application Status</h2>
+
+<div class="container">
+    <form method="post" action="/LoginAccounts/ApplicationStatus" class="mb-4">
+        <div class="mb-3">
+            <label for="email" class="form-label">Enter your email:</label>
+            <input type="email" name="email" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Check Status</button>
+    </form>
+
+    @if (Model != null)
+    {
+        <h4>Application Details</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        @if (Model.Status == "Accepted")
+                        {
+                            <th>Account Number</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                        }
+                        else if (Model.Status == "Rejected")
+                        {
+                            <th>Remarks</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Model.Name</td>
+                        <td>@Model.Email</td>
+                        <td>
+                            @if (Model.Status == "Accepted")
+                            {
+                                <span class="badge bg-success">Accepted</span>
+                            }
+                            else if (Model.Status == "Rejected")
+                            {
+                                <span class="badge bg-danger">Rejected</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            }
+                        </td>
+
+                        @if (Model.Status == "Accepted")
+                        {
+                            <td>@Model.AccountNumber</td>
+                            <td>@Model.Username</td>
+                            <td>@Model.Password</td>
+                        }
+                        else if (Model.Status == "Rejected")
+                        {
+                            <td>@Model.Remarks</td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+    else if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Message</div>
+    }
+</div>

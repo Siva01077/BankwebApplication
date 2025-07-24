@@ -1,0 +1,346 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>HDFC Bank - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    <style>
+        /* Background gradient */
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: mistyrose;
+            color: #fff;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header */
+        .header {
+            background-color: #0094ff;
+            color: #f0f8ff;
+            padding: 20px 0 10px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+            .header .title-row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .header img {
+                height: 60px;
+                filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.5));
+            }
+
+            .header h1 {
+                font-size: 2.4rem;
+                margin: 0;
+                font-weight: 700;
+                letter-spacing: 1.5px;
+                text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+            }
+
+        /* Footer */
+        .footer {
+            background-color: #002244;
+            color: #a0c8ff;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 0.9rem;
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.1);
+            user-select: none;
+        }
+
+        /* Welcome Text */
+        .welcome-text {
+            color: #00ffff;
+            font-weight: 700;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Main container with notifications + login */
+        .main-row {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 0 15px;
+        }
+
+        /* Notification Box */
+        .notification-box {
+            width: 320px;
+            background: #004080;
+            border-radius: 16px;
+            padding: 25px 20px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            flex-shrink: 0;
+            color: #cce6ff;
+            font-weight: 600;
+            user-select: none;
+            transition: background-color 0.3s ease;
+            max-height: 400px; /* Fixed height */
+            overflow-y: auto;
+        }
+
+            .notification-box:hover {
+                background: #0059b3;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            }
+
+            .notification-box h5 {
+                font-weight: 800;
+                margin-bottom: 18px;
+                border-bottom: 3px solid #3399ff;
+                padding-bottom: 8px;
+                font-size: 1.4rem;
+                text-shadow: 0 0 6px #3399ff;
+            }
+
+        .notification-content {
+            height: 260px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .notification-items {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            animation: scroll-up 12s linear infinite;
+        }
+
+            .notification-items p {
+                margin: 0 0 18px 0;
+                font-size: 1.05rem;
+                line-height: 1.4;
+                text-shadow: 0 0 5px rgba(0, 77, 153, 0.5);
+            }
+
+        @@keyframes scroll-up {
+            0% {
+                top: 100%;
+            }
+
+            100% {
+                top: -100%;
+            }
+        }
+
+        /* Login Box */
+        .login-box {
+            background: #ffffff;
+            color: #003366;
+            padding: 45px 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px 20px rgba(0, 0, 0, 0.4);
+            text-align: left;
+            width: 100%;
+            max-width: 700px; /* Increased width */
+            user-select: none;
+            transition: box-shadow 0.3s ease;
+            margin: 20px auto; /* ensure space for shadow */
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+
+            .login-box:hover {
+                box-shadow: 0 15px 50px rgba(0, 51, 102, 0.5);
+            }
+
+        /* Form labels */
+        label {
+            font-weight: 600;
+            color: #004080;
+        }
+
+        /* Form controls */
+        .form-control {
+            border: 2px solid #3399ff;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 1.05rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .form-control:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+                outline: none;
+            }
+
+        /* Validation message styling */
+        .text-danger {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* Center login button */
+        .btn-center {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-success {
+            background-color: #007bff;
+            border: none;
+            padding: 12px 36px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 12px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+            cursor: pointer;
+        }
+
+            .btn-success:hover {
+                background-color: #0056b3;
+                box-shadow: 0 8px 20px rgba(0, 86, 179, 0.6);
+            }
+
+        /* Responsive tweaks */
+        @@media (max-width: 768px) {
+            .main-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+
+            .notification-box {
+                width: 90%;
+            }
+
+            .login-box {
+                width: 90%;
+                padding: 35px 25px;
+            }
+        }
+
+        .navbar-nav .dropdown:hover .dropdown-menu {
+            display: block;
+            margin-top: 0; /* remove default gap */
+        }
+
+        .dropdown-menu {
+            transition: all 0.3s ease;
+            background-color: #003366;
+        }
+
+        .dropdown-item {
+            color: #fff !important;
+        }
+
+            .dropdown-item:hover {
+                background-color: #0059b3;
+                color: #fff;
+            }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <div class="title-row">
+                <img src="~/Images/hdfclogo.jpg" alt="HDFC Bank" class="img-fluid" />
+                <h1>HDFC BANK</h1>
+            </div>
+        </div>
+    </div>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+        <div class="container">
+            <a class="navbar-brand" href="#">🏦 HDFC Portal</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-left" id="navbarContent">
+                <ul class="navbar-nav ">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action("Logins", "LoginAccounts")">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Dashboard", "LoginAccounts")">Dashboard</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button">
+                            Account Creation
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                            <li><a class="dropdown-item" href="@Url.Action("AccountRegistration", "LoginAccounts")">Create Account</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("ApplicationStatus", "LoginAccounts")">Application Status</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("UserLogin", "LoginAccounts")">User Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("EmployeeLogin", "LoginAccounts")">Employee Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("About", "LoginAccounts")">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Contact", "LoginAccounts")">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: calc(100vh - 140px); gap: 20px;">
+        <h2 class="welcome-text">Welcome to HDFC Banking</h2>
+
+        <div class="main-row">
+            <!-- Notifications Column -->
+            <div class="notification-box" aria-label="Latest Updates">
+                <h5>🔔 Latest Updates</h5>
+                <div class="notification-content" aria-live="polite" aria-atomic="true">
+                    <div class="notification-items">
+                        <p>🚨 New! HDFC launches zero balance accounts for students.</p>
+                        <p>📢 Maintenance: Internet banking will be down Sunday 2–4AM.</p>
+                        <p>💡 Reminder: Never share your OTP or passwords with anyone.</p>
+                        <p>🎁 Offer: Lowest interest on home loans now available!</p>
+                        <p>🎉 Cashback on every online payment via HDFC credit cards!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Form Column -->
+            <div class="login-box">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; @DateTime.Now.Year HDFC Bank. All Rights Reserved.
+    </div>
+</body>
+</html>

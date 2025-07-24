@@ -1,0 +1,51 @@
+﻿@model LoginsModel.TransactionModel
+
+@{
+    ViewBag.Title = "Withdraw";
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#withdrawForm").submit(function (e) {
+            e.preventDefault();
+
+            var WithdrawData = {
+                RecieverName: $("#RecieverName").val(),
+                Debit: parseFloat($("#Debit").val())
+            };
+
+            $.ajax({
+                url: '@Url.Action("Withdraw", "UserAccountDetails")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(WithdrawData),
+                success: function () {
+                    $("#withdrawMessage").html('<div class="alert alert-success">Withdraw successful.</div>');
+                    setTimeout(() => window.location.href = '@Url.Action("UserDashboard", "UserAccountDetails")', 1000);
+                },
+                error: function (xhr) {
+                    let err = xhr.status === 400 ? xhr.statusText : "Withdraw failed. Please try again.";
+                    $("#withdrawMessage").html('<div class="alert alert-danger">' + err + '</div>');
+                }
+            });
+        });
+    });
+</script>
+
+<h3 class="text-danger">Withdraw</h3>
+<div id="withdrawMessage"></div>
+
+<form id="withdrawForm">
+    <div class="mb-3">
+        @Html.LabelFor(m => m.RecieverName)
+        @Html.TextBoxFor(m => m.RecieverName, new { @class = "form-control", placeholder = "Enter receiver name", required = "required", id = "RecieverName" })
+    </div>
+    <div class="mb-3">
+        @Html.Label("Debit", "Amount")
+        @Html.TextBoxFor(m => m.Debit, new { @class = "form-control", required = "required", id = "Debit" })
+    </div>
+    <button type="submit" class="btn btn-danger">Withdraw</button>
+</form>

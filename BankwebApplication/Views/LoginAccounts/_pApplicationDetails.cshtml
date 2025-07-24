@@ -1,0 +1,47 @@
+﻿@model List<LoginsModel.BankAccountRegistrationDTO>
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Gender</th>
+                <th>DOB</th>
+                <th>Aadhar No.</th>
+                <th>Aadhar Proof</th>
+                <th>PAN No.</th>
+                <th>PAN Proof</th>
+                <th>Photo</th>
+                <th>AccountType</th>
+                <th>Mode of Operation</th>
+                <th>Status</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Email</td>
+                    <td>@item.Phone</td>
+                    <td>@item.Address</td>
+                    <td>@item.Gender</td>
+                    <td>@item.DateOfBirth</td>
+                    <td>@item.AadharNumber</td>
+                    <td>@item.AadharProof</td>
+                    <td>@item.PanNumber</td>
+
+                    <td>@item.PanProof</td>
+                    <td>@item.Photo</td>
+                    <td>@item.AccountType</td>
+                    <td>@item.ModeOfOperation</td>
+                    <td>@item.Status</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>

@@ -1,0 +1,207 @@
+﻿@model LoginsModel.BankAccountRegistrationDTO
+
+@{
+    Layout = "~/Views/Shared/_Layout_Login.cshtml";
+}
+<style>
+
+    .required-field::after {
+        content: " *";
+        color: red;
+        font-weight: bold;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+
+
+        // Gather all USER form data
+        function getUserData() {
+            var Gender = $("input[name='Gender']:checked").val();
+
+            if (!Gender) {
+                $(".gender-validation").text("Please select a gender.");
+                return;
+            } else {
+                $(".gender-validation").text("");
+            }
+
+            return {
+                Name: $('#Name').val(),
+                Email: $('#Email').val(),
+                Phone: $('#Phone').val(),
+                Address: $('#Address').val(),
+                DateOfBirth: $('#DateOfBirth').val(),
+                Gender: Gender,
+                AadharNumber: $('#AadharNumber').val(),
+                PanNumber: $('#PanNumber').val(),
+                AccountType: $('#AccountType').val(),
+                ModeOfOperation: $('#ModeOfOperation').val(),
+                AadharProof: $('#AadharProof').val(),
+                PanProof: $('#PanProofFile').val(),
+                Photo: $('#Photo').val()
+            };
+
+        }
+
+        // Submit new alumni registration
+        $('#submitButton').click(function (e) {
+            e.preventDefault();
+            if (!$('#formUser').valid()) return;
+
+            var UserData = getUserData();
+
+            $.ajax({
+                url: '@Url.Action("AccountRegistration", "LoginAccounts")',
+                type: 'POST',
+                data: JSON.stringify(UserData),
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result === true || result.success === true) {
+                        alert("Registration completed successfully!");
+                        $('#formUser')[0].reset();
+                        $(".gender-validation").text("");
+                    } else {
+                        alert("Data insertion failed.");
+                    }
+                },
+                error: function () {
+                    alert("Error submitting the form.");
+                }
+            });
+        });
+
+          $('#loadDataButton').click(function () {
+      $.ajax({
+          url: '@Url.Action("GetApplicationDetails", "LoginAccounts")',
+          type: 'GET',
+          success: function (data) {
+              $('#ApplicationData').html(data);
+          },
+          error: function () {
+              alert("Error loading data.");
+          }
+      });
+  });
+    });
+</script>
+
+
+@using (Html.BeginForm("AccountRegistration", "LoginAccounts", FormMethod.Post, new { @id = "formUser" }))
+{
+    <div class="container my-5 form-container">
+        <h2 class="text-center mb-4">Bank Account Application</h2>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Name, "Name", new { @class = "required-field" })
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", id = "Name" })
+            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Email, "Email", new { @class = "required-field" })
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", id = "Email" })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+        </div>
+
+
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Phone, "Phone", new { @class = "required-field" })
+            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", id = "Phone" })
+            @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Address, "Address", new { @class = "required-field" })
+            @Html.TextAreaFor(m => m.Address, new { @class = "form-control", id = "Address", })
+            @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.AadharNumber, "AadharNumber", new { @class = "required-field" })
+            @Html.TextBoxFor(m => m.AadharNumber, new { @class = "form-control", id = "AadharNumber" })
+            @Html.ValidationMessageFor(m => m.AadharNumber, "", new { @class = "text-danger" })
+        </div>
+
+
+        <div class="mb-3">
+            @Html.Label("Upload Aadhaar Proof", new { @class = "required-field" })
+            <input type="file" class="form-control" id="AadharProof" accept=".pdf,image/*" />
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.PanNumber, "PanNumber")
+            @Html.TextBoxFor(m => m.PanNumber, new { @class = "form-control", id = "PanNumber" })
+            @Html.ValidationMessageFor(m => m.PanNumber, "", new { @class = "text-danger" })
+        </div>
+
+
+        <div id="PanProof" class="mb-3">
+            @Html.Label("Upload PAN Proof")
+            <input type="file" class="form-control" accept=".pdf,image/*" />
+        </div>
+
+
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.DateOfBirth, "Date Of Birth", new { @class = "required-field" })
+            @Html.TextBoxFor(m => m.DateOfBirth, new { @class = "form-control", id = "DateOfBirth", type = "date" })
+            @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-lg-4">@Html.Label("Gender")</div>
+            <div class="col-lg-8">
+                <div class="form-check form-check-inline">
+                    @Html.RadioButtonFor(m => m.Gender, "Male", new { @class = "form-check-input", id = "genderMale" })
+                    <label class="form-check-label" for="genderMale">Male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    @Html.RadioButtonFor(m => m.Gender, "Female", new { @class = "form-check-input", id = "genderFemale" })
+                    <label class="form-check-label" for="genderFemale">Female</label>
+                </div>
+                <span class="text-danger gender-validation"></span>
+                @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="mb-3">
+            @Html.Label("Upload Photo")
+            <input type="file" id="Photo" class="form-control" accept=".pdf,image/*" />
+        </div>
+
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.AccountType, "Account Type", new { @class = "required-field" })
+            @Html.DropDownListFor(m => m.AccountType, new SelectList(new[] { "Savings", "Current", "Student", "Salary" }), "Select", new { @class = "form-control", id = "AccountType" })
+            @Html.ValidationMessageFor(m => m.AccountType, "", new { @class = "text-danger" })
+        </div>
+
+
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.ModeOfOperation, "Mode Of Operation", new { @class = "required-field" })
+            @Html.DropDownListFor(m => m.ModeOfOperation, new SelectList(new[] { "Single", "Joint" }), "Select", new { @class = "form-control", id = "ModeOfOperation" })
+            @Html.ValidationMessageFor(m => m.ModeOfOperation, "", new { @class = "text-danger" })
+        </div>
+
+
+        <div class="align-items-center text-center">
+            <button type="submit" id="submitButton" class="btn btn-primary">Submit Application</button>
+        </div>
+
+
+    </div>
+
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <button type="submit" id="loadDataButton" class="btn btn-warning">LoadData</button>
+    </div>
+   
+
+</div>
+<div id="ApplicationData"></div>

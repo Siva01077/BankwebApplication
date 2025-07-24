@@ -1,0 +1,167 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title> "HDFC Bank - Login"</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    <style>
+        .navbar-nav .dropdown:hover .dropdown-menu {
+            display: block;
+            margin-top: 0; /* remove default gap */
+        }
+
+        .dropdown-menu {
+            transition: all 0.3s ease;
+            background-color: #003366;
+        }
+
+        .dropdown-item {
+            color: #fff !important;
+        }
+
+            .dropdown-item:hover {
+                background-color: #0059b3;
+                color: #fff;
+            }
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f8fa;
+            background-image: url('@(ViewBag.BackgroundImage ?? Url.Content("~/Images/default-bg.jpg"))');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px 0 10px;
+            text-align: center;
+        }
+
+        .header .title-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header img {
+            height: 60px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .login-box {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+
+        }
+
+        .btn {
+            padding: 12px;
+            font-size: 1.2rem;
+        }
+
+        /* Welcome text styling */
+        .welcome-text {
+            color: #00ffff;
+            font-weight: 600;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: none; /* no shadow */
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <div class="title-row">
+                <img src="~/Images/hdfcbank.jpg" alt="HDFC Bank Logo" />
+                <h1>HDFC BANK</h1>
+            </div>
+        </div>
+    </div>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+        <div class="container">
+            <a class="navbar-brand" href="#">🏦 HDFC Portal</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-left" id="navbarContent">
+                <ul class="navbar-nav ">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action("Logins", "LoginAccounts")">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Dashboard", "LoginAccounts")">Dashboard</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button">
+                            Account Creation
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                            <li><a class="dropdown-item" href="@Url.Action("AccountRegistration", "LoginAccounts")">Create Account</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("ApplicationStatus", "LoginAccounts")">Application Status</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("UserLogin", "LoginAccounts")">User Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("EmployeeLogin", "LoginAccounts")">Employee Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("About", "LoginAccounts")">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Contact", "LoginAccounts")">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Centered Content -->
+    <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: calc(100vh - 140px); gap: 20px;">
+        <h2 class="welcome-text">Welcome to HDFC Banking</h2>
+        <div>
+            @RenderBody()
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; @DateTime.Now.Year HDFC Bank. All Rights Reserved.
+    </div>
+</body>
+</html>

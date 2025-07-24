@@ -1,0 +1,95 @@
+﻿@{
+    ViewBag.Title = "User Dashboard";
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
+            <h2 style="color:darkgoldenrod"><i class="fas fa-user-circle"></i> Welcome, @Session["UserName"]</h2>
+            <p class="text-muted">Your personal banking dashboard</p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <!-- Account Info -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-primary w-100 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-wallet fa-2x text-primary mb-2"></i>
+                    <h5>Account Number</h5>
+                    <p>@Session["AccountNumber"]</p>
+                </div>
+            </div>
+        </div>
+        <!-- Balance Info -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-success w-100 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-rupee-sign fa-2x text-success mb-2"></i>
+                    <h5>Available Balance</h5>
+                    <p>₹ @Session["Balance"]</p>
+                </div>
+            </div>
+        </div>
+        <!-- Quick Actions -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-warning w-100 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-exchange-alt fa-2x text-warning mb-2"></i>
+                    <h5>Quick Actions</h5>
+                    <a href="/UserAccountDetails/Deposit" class="btn btn-sm btn-outline-success me-2">
+                        Deposit
+                    </a>
+                    <a href="/UserAccountDetails/Withdraw" class="btn btn-sm btn-outline-danger">
+                        Withdraw
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Recent Transactions -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-history"></i> Recent Transactions
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Reference</th>
+                        <th>Ref.No/Chq.No.</th>
+                        <th>Credit</th>
+                        <th>Debit</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.Transactions)
+                    {
+                        <tr>
+                            <td>@item.Date.ToString("dd-MM-yyyy hh:mm tt")</td>
+                            <td>@item.Type</td>
+                            <td>@item.Reference</td>
+                            <td>
+                                @if (item.Credit > 0)
+                                {
+                                    <span class="text-success">₹ @item.Credit</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Debit > 0)
+                                {
+                                    <span class="text-danger">₹ @item.Debit</span>
+                                }
+                            </td>
+                            <td>₹ @item.BalanceAfter</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
